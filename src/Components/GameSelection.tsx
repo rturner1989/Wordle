@@ -1,15 +1,17 @@
 import React, { SetStateAction } from "react";
 import axios from "axios";
-import { singleWord } from "../Library/Interface";
+import { gameDifficulty, singleWord } from "../Library/Interface";
 
 interface props {
     modeSelect: React.Dispatch<SetStateAction<singleWord[] | null>>;
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
-    const easy: string = "easyModeData.json";
-    const normal: string = "normalModeData.json";
-    const hard: string = "hardModeData.json";
+    const gameDifficulty: gameDifficulty[] = [
+        { diffName: "easy", diffMode: "easyModeData.json" },
+        { diffName: "normal", diffMode: "normalModeData.json" },
+        { diffName: "hard", diffMode: "hardModeData.json" },
+    ];
 
     const getAllWords = (url: string) => {
         axios
@@ -23,9 +25,17 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
 
     return (
         <div>
-            <button onClick={() => getAllWords(easy)}>Easy</button>
-            <button onClick={() => getAllWords(normal)}>Normal</button>
-            <button onClick={() => getAllWords(hard)}>Hard</button>
+            {gameDifficulty.map((diff) => {
+                const { diffName, diffMode } = diff;
+                return (
+                    <button
+                        key={diffName}
+                        onClick={() => getAllWords(diffMode)}
+                    >
+                        {diffName}
+                    </button>
+                );
+            })}
         </div>
     );
 };
