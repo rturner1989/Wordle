@@ -3,7 +3,7 @@ import axios from "axios";
 import { gameDifficulty, singleWord } from "../Library/Interface";
 
 interface props {
-    modeSelect: React.Dispatch<SetStateAction<singleWord[] | null>>;
+    modeSelect: React.Dispatch<SetStateAction<singleWord | null>>;
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
@@ -13,12 +13,13 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
         { diffName: "hard", diffMode: "hardModeData.json" },
     ];
 
-    const getAllWords = (url: string) => {
+    const getRandomWord = (url: string) => {
         axios
             .get<singleWord[]>(url)
             .then((res) => {
                 const data = res.data;
-                modeSelect(data);
+                const random = Math.floor(Math.random() * data.length);
+                modeSelect(data[random]);
             })
             .catch((err) => console.error(`Error: ${err}`));
     };
@@ -30,7 +31,7 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
                 return (
                     <button
                         key={diffName}
-                        onClick={() => getAllWords(diffMode)}
+                        onClick={() => getRandomWord(diffMode)}
                     >
                         {diffName}
                     </button>
