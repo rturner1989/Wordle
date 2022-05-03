@@ -25,11 +25,19 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     );
 
     const compareWords = () => {
-        console.log("fired");
+        return currentWordInput.forEach((char, index) => {
+            if (!answerSplit.includes(char)) {
+                console.log("not included");
+            }
+            return answerSplit[index] === char
+                ? console.log("correct location")
+                : console.log("included but wrong location");
+        });
     };
 
     return (
         <div>
+            {guessWord}
             <button onClick={exitGame}>clear</button>
             <GuessesTable guessWord={guessWord} />
             <Keyboard
