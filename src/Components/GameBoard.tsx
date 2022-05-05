@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { updateIf } from "typescript";
 import { keyState } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
@@ -24,16 +25,34 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         })
     );
 
+    const updateKeyState = (char: string, color: keyState) => {
+        return keys.forEach((key, index) => {
+            if (key.keyTrigger !== char) {
+                return;
+            }
+            setKeys((prev) => {
+                const newKey = { ...prev[index], state: color };
+                return [
+                    ...prev.slice(0, index),
+                    newKey,
+                    ...prev.slice(index + 1),
+                ];
+            });
+        });
+    };
+
     const compareWords = () => {
         return currentWordInput.forEach((char, index) => {
             if (!answerSplit.includes(char)) {
-                console.log("not included");
+                return updateKeyState(char, keyState.INCORRECT);
             }
             return answerSplit[index] === char
-                ? console.log("correct location")
-                : console.log("included but wrong location");
+                ? updateKeyState(char, keyState.CORRECT)
+                : updateKeyState(char, keyState.WRONGLOCATION);
         });
     };
+
+    console.log(keys);
 
     return (
         <div>
