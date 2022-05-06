@@ -19,6 +19,7 @@ const Keyboard: React.FC<props> = ({
 }) => {
     const addLetterToInput = (key: string) => {
         if (input.length >= answerLength) return;
+        if (key === "Enter") return;
         setInput([...input, key]);
     };
 

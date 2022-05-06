@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { updateIf } from "typescript";
 import { keyState } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
@@ -11,11 +10,10 @@ interface props {
 }
 
 const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
-    const [currentWordInput, setCurrentWordInput] = useState<string[]>([]);
-    const [answerSplit, setAnswerSplit] = useState(guessWord.split(""));
-
     const alphabet = "qwertyuiopasdfghjklzxcvbnm";
 
+    const [currentWordInput, setCurrentWordInput] = useState<string[]>([]);
+    const [answerSplit, setAnswerSplit] = useState(guessWord.split(""));
     const [keys, setKeys] = useState<keyType[]>(() =>
         alphabet.split("").map((letter: string) => {
             return {
@@ -24,6 +22,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
             };
         })
     );
+    const [guessHistory, setGuessHistory] = useState<string[][]>([...Array(6)]);
 
     const updateKeyState = (char: string, color: keyState) => {
         return keys.forEach((key, index) => {
@@ -41,8 +40,25 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         });
     };
 
+    const updateHistory = () => {
+        // setGuessHistory([...guessHistory, currentWordInput]);
+        return guessHistory.forEach((key, index) => {
+            console.log(key);
+            if (key !== undefined) return;
+
+            setGuessHistory((prev) => {
+                return [
+                    ...prev.slice(0, index),
+                    currentWordInput,
+                    ...prev.slice(index + 1),
+                ];
+            });
+        });
+    };
+
     const compareWords = () => {
-        return currentWordInput.forEach((char, index) => {
+        if (currentWordInput.length < answerSplit.length) return;
+        currentWordInput.forEach((char, index) => {
             if (!answerSplit.includes(char)) {
                 return updateKeyState(char, keyState.INCORRECT);
             }
@@ -50,15 +66,15 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
                 ? updateKeyState(char, keyState.CORRECT)
                 : updateKeyState(char, keyState.WRONGLOCATION);
         });
+        updateHistory();
+        setCurrentWordInput([]);
     };
-
-    console.log(keys);
 
     return (
         <div>
             {guessWord}
             <button onClick={exitGame}>clear</button>
-            <GuessesTable guessWord={guessWord} />
+            <GuessesTable history={guessHistory} inputWord={currentWordInput} />
             <Keyboard
                 keys={keys}
                 answerLength={answerSplit.length}

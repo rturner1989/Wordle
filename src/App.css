@@ -1,0 +1,21 @@
+.btn-correct {
+    background-color: green;
+}
+.btn-incorrect {
+    background-color: red;
+}
+.btn-wrongLocation {
+    background-color: yellow;
+}
+.row {
+    display: flex;
+}
+.rowLetter {
+    width: 50px;
+    aspect-ratio: 1/1;
+    border: black solid 1px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
