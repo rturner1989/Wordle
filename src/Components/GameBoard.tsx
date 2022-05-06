@@ -22,6 +22,8 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
             };
         })
     );
+
+    const [turn, setTurn] = useState(1);
     const [guessHistory, setGuessHistory] = useState<string[][]>([...Array(6)]);
 
     const updateKeyState = (char: string, color: keyState) => {
@@ -41,16 +43,15 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     };
 
     const updateHistory = () => {
-        // setGuessHistory([...guessHistory, currentWordInput]);
         return guessHistory.forEach((key, index) => {
             console.log(key);
             if (key !== undefined) return;
 
             setGuessHistory((prev) => {
                 return [
-                    ...prev.slice(0, index),
+                    ...prev.slice(0, turn - 1),
                     currentWordInput,
-                    ...prev.slice(index + 1),
+                    ...prev.slice(turn),
                 ];
             });
         });
@@ -66,6 +67,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
                 ? updateKeyState(char, keyState.CORRECT)
                 : updateKeyState(char, keyState.WRONGLOCATION);
         });
+        setTurn(turn + 1);
         updateHistory();
         setCurrentWordInput([]);
     };
@@ -74,7 +76,11 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         <div>
             {guessWord}
             <button onClick={exitGame}>clear</button>
-            <GuessesTable history={guessHistory} inputWord={currentWordInput} />
+            <GuessesTable
+                gameLength={answerSplit.length}
+                history={guessHistory}
+                inputWord={currentWordInput}
+            />
             <Keyboard
                 keys={keys}
                 answerLength={answerSplit.length}

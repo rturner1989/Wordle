@@ -1,8 +1,10 @@
 import React from "react";
 
-interface props {}
+interface props {
+    gameLength: number;
+}
 
-const EmptyRow: React.FC<props> = () => {
+const EmptyRow: React.FC<props> = ({ gameLength }) => {
     return (
         <div className="row">
             <div className="rowLetter"></div>

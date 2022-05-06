@@ -3,22 +3,21 @@ import EmptyRow from "./EmptyRow";
 import Row from "./Row";
 
 interface props {
+    gameLength: number;
     history: string[][];
     inputWord: string[];
 }
 
-const GuessesTable: React.FC<props> = ({ history, inputWord }) => {
-    console.log(history);
-
+const GuessesTable: React.FC<props> = ({ gameLength, history, inputWord }) => {
     return (
         <div>
             {history.map((prevWord, index) => {
                 return (
                     <React.Fragment key={index}>
                         {prevWord === undefined ? (
-                            <EmptyRow />
+                            <EmptyRow gameLength={gameLength} />
                         ) : (
-                            <Row prevWord={prevWord} />
+                            <Row gameLength={gameLength} prevWord={prevWord} />
                         )}
                     </React.Fragment>
                 );

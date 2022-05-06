@@ -1,7 +1,9 @@
 import React from "react";
+import { makeID } from "../Library/helpers";
 
 interface props {
     prevWord: string[] | undefined;
+    gameLength: number;
 }
 
 const Row: React.FC<props> = ({ prevWord }) => {
@@ -11,7 +13,7 @@ const Row: React.FC<props> = ({ prevWord }) => {
         <div className="row">
             {prevWord?.map((letter) => {
                 return (
-                    <div key={letter} className="rowLetter">
+                    <div key={makeID()} className="rowLetter">
                         {letter}
                     </div>
                 );
