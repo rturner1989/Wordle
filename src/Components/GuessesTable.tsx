@@ -18,11 +18,7 @@ const GuessesTable: React.FC<props> = ({
     return (
         <div>
             {history.map((prevWord, index) => {
-                console.log(index);
-
                 if (index === turn - 1) {
-                    console.log("fierd");
-
                     return (
                         <React.Fragment key={index}>
                             <Row

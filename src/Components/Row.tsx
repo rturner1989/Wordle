@@ -7,8 +7,6 @@ interface props {
 }
 
 const Row: React.FC<props> = ({ prevWord }) => {
-    console.log(prevWord);
-
     return (
         <div className="row">
             {prevWord?.map((letter) => {
