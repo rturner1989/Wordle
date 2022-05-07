@@ -43,8 +43,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     };
 
     const updateHistory = () => {
-        return guessHistory.forEach((key, index) => {
-            console.log(key);
+        return guessHistory.forEach((key) => {
             if (key !== undefined) return;
 
             setGuessHistory((prev) => {
@@ -80,6 +79,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
                 gameLength={answerSplit.length}
                 history={guessHistory}
                 inputWord={currentWordInput}
+                turn={turn}
             />
             <Keyboard
                 keys={keys}
