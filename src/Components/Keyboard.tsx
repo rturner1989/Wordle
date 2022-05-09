@@ -8,6 +8,7 @@ interface props {
     input: string[];
     setInput: React.Dispatch<SetStateAction<string[]>>;
     enter: () => void;
+    gameState: boolean;
 }
 
 const Keyboard: React.FC<props> = ({
@@ -16,10 +17,12 @@ const Keyboard: React.FC<props> = ({
     input,
     setInput,
     enter,
+    gameState,
 }) => {
     const addLetterToInput = (key: string) => {
         if (input.length >= answerLength) return;
         if (key === "Enter") return;
+
         setInput([...input, key]);
     };
 
@@ -28,14 +31,16 @@ const Keyboard: React.FC<props> = ({
     };
 
     const handleInput = (key: string) => {
-        if (key.match(/[a-z]/i)) {
-            addLetterToInput(key);
-        }
-        if (key === "Backspace") {
-            deleteLastLetter();
-        }
-        if (key === "Enter") {
-            enter();
+        if (!gameState) {
+            if (key.match(/[a-z]/i)) {
+                addLetterToInput(key);
+            }
+            if (key === "Backspace") {
+                deleteLastLetter();
+            }
+            if (key === "Enter") {
+                enter();
+            }
         }
         return;
     };

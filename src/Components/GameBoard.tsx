@@ -25,6 +25,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
 
     const [turn, setTurn] = useState(1);
     const [guessHistory, setGuessHistory] = useState<string[][]>([...Array(6)]);
+    const [gameState, setGameState] = useState<boolean>(false);
 
     const updateKeyState = (char: string, color: keyState) => {
         return keys.forEach((key, index) => {
@@ -61,11 +62,14 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         currentWordInput.forEach((char, index) => {
             if (!answerSplit.includes(char)) {
                 return updateKeyState(char, keyState.INCORRECT);
+            } else {
+                if (answerSplit[index] === char) {
+                    return updateKeyState(char, keyState.CORRECT);
+                }
+                return updateKeyState(char, keyState.WRONGLOCATION);
             }
-            return answerSplit[index] === char
-                ? updateKeyState(char, keyState.CORRECT)
-                : updateKeyState(char, keyState.WRONGLOCATION);
         });
+        if (currentWordInput.join("") === guessWord) setGameState(true);
         setTurn(turn + 1);
         updateHistory();
         setCurrentWordInput([]);
@@ -87,6 +91,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
                 input={currentWordInput}
                 setInput={setCurrentWordInput}
                 enter={compareWords}
+                gameState={gameState}
             />
         </div>
     );
