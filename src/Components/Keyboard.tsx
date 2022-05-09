@@ -1,12 +1,13 @@
 import { SetStateAction, useEffect, Fragment } from "react";
 import { keyType } from "../Library/Interface";
 import { BsBackspace } from "react-icons/bs";
+import { keyState } from "../Library/enums";
 
 interface props {
     keys: keyType[];
     answerLength: number;
-    input: string[];
-    setInput: React.Dispatch<SetStateAction<string[]>>;
+    input: keyType[];
+    setInput: React.Dispatch<SetStateAction<keyType[]>>;
     enter: () => void;
     gameState: boolean;
 }
@@ -23,7 +24,9 @@ const Keyboard: React.FC<props> = ({
         if (input.length >= answerLength) return;
         if (key === "Enter") return;
 
-        setInput([...input, key]);
+        setInput((prev) => {
+            return [...prev, { keyTrigger: key, state: keyState.DEFAULT }];
+        });
     };
 
     const deleteLastLetter = () => {

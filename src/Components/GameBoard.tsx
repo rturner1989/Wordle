@@ -12,8 +12,11 @@ interface props {
 const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     const alphabet = "qwertyuiopasdfghjklzxcvbnm";
 
-    const [currentWordInput, setCurrentWordInput] = useState<string[]>([]);
     const [answerSplit, setAnswerSplit] = useState(guessWord.split(""));
+    const [currentWordInput, setCurrentWordInput] = useState<keyType[]>([]);
+    const [guessHistory, setGuessHistory] = useState<keyType[][]>([
+        ...Array(6),
+    ]);
     const [keys, setKeys] = useState<keyType[]>(() =>
         alphabet.split("").map((letter: string) => {
             return {
@@ -22,10 +25,8 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
             };
         })
     );
-
-    const [turn, setTurn] = useState(1);
-    const [guessHistory, setGuessHistory] = useState<string[][]>([...Array(6)]);
     const [gameState, setGameState] = useState<boolean>(false);
+    const [turn, setTurn] = useState(1);
 
     const updateKeyState = (char: string, color: keyState) => {
         return keys.forEach((key, index) => {
@@ -43,8 +44,8 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         });
     };
 
-    const updateHistory = () => {
-        return guessHistory.forEach((key) => {
+    const updateHistory = (color: keyState) => {
+        guessHistory.forEach((key, index) => {
             if (key !== undefined) return;
 
             setGuessHistory((prev) => {
@@ -59,19 +60,30 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
 
     const compareWords = () => {
         if (currentWordInput.length < answerSplit.length) return;
-        currentWordInput.forEach((char, index) => {
-            if (!answerSplit.includes(char)) {
-                return updateKeyState(char, keyState.INCORRECT);
+
+        currentWordInput.forEach((key, index) => {
+            if (!answerSplit.includes(key.keyTrigger)) {
+                return updateKeyState(key.keyTrigger, keyState.INCORRECT);
             } else {
-                if (answerSplit[index] === char) {
-                    return updateKeyState(char, keyState.CORRECT);
+                if (answerSplit[index] === key.keyTrigger) {
+                    return (
+                        updateKeyState(key.keyTrigger, keyState.CORRECT),
+                        updateHistory(keyState.CORRECT)
+                    );
                 }
-                return updateKeyState(char, keyState.WRONGLOCATION);
+                return updateKeyState(key.keyTrigger, keyState.WRONGLOCATION);
             }
         });
-        if (currentWordInput.join("") === guessWord) setGameState(true);
+
+        if (
+            currentWordInput.map((letter) => letter.keyTrigger).join("") ===
+            guessWord
+        ) {
+            setGameState(true);
+        }
+
         setTurn(turn + 1);
-        updateHistory();
+        updateHistory(keyState.DEFAULT);
         setCurrentWordInput([]);
     };
 

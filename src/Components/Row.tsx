@@ -1,8 +1,9 @@
 import React from "react";
 import { makeID } from "../Library/helpers";
+import { keyType } from "../Library/Interface";
 
 interface props {
-    prevWord: string[] | undefined;
+    prevWord: keyType[] | undefined;
     gameLength: number;
 }
 
@@ -12,7 +13,7 @@ const Row: React.FC<props> = ({ prevWord }) => {
             {prevWord?.map((letter) => {
                 return (
                     <div key={makeID()} className="rowLetter">
-                        {letter}
+                        {letter?.keyTrigger}
                     </div>
                 );
             })}
