@@ -13,7 +13,7 @@ interface props {
 
 const GuessesTable: React.FC<props> = ({ gameLength, history, inputWord, turn }) => {
     return (
-        <div>
+        <div className="gamegrid">
             {history.map((prevWord, index) => {
                 if (index === turn - 1) {
                     return (

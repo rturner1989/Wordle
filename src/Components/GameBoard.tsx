@@ -11,8 +11,8 @@ interface props {
 
 const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     const alphabet = "qwertyuiopasdfghjklzxcvbnm";
+    const answerSplit = guessWord.split("");
 
-    const [answerSplit, setAnswerSplit] = useState(guessWord.split(""));
     const [currentWordInput, setCurrentWordInput] = useState<keyType[]>([]);
     const [guessHistory, setGuessHistory] = useState<keyType[][]>([...Array(6)]);
     const [keys, setKeys] = useState<keyType[]>(() =>
@@ -27,7 +27,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     const [turn, setTurn] = useState(1);
 
     const updateKeyState = (char: string, color: keyState) => {
-        return keys.forEach((key, index) => {
+        keys.forEach((key, index) => {
             if (key.keyTrigger !== char) {
                 return;
             }
@@ -49,10 +49,16 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     };
 
     const compareWords = () => {
-        if (currentWordInput.length < answerSplit.length) return;
+        const joinedInput = currentWordInput.join("");
 
-        // add functionality to compare if word used already
-        // add functionality to see if word is a word in list
+        if (currentWordInput.length < answerSplit.length) return;
+        if (!guessWord.includes(joinedInput)) console.log("not included");
+
+        guessHistory.forEach((key: keyType[]) => {
+            const joinedHistory = key.join("");
+            if (key === undefined) return;
+            if (joinedHistory.includes(joinedInput)) console.log("already used");
+        });
 
         let result: keyType[] = [];
 
@@ -88,7 +94,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     };
 
     return (
-        <div>
+        <div className="gameContainer">
             {guessWord}
             <button onClick={exitGame}>clear</button>
             <GuessesTable
