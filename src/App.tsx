@@ -11,16 +11,15 @@ function App() {
         setGameWord(null);
     };
 
-    // render component
-    const screenSelection = () => {
-        if (!gameWord) {
-            return <GameSelection modeSelect={setGameWord} />;
-        } else {
-            return <GameBoard guessWord={gameWord.word} exitGame={clearWord} />;
-        }
-    };
-
-    return <div className="App">{screenSelection()}</div>;
+    return (
+        <div className="App">
+            {!gameWord ? (
+                <GameSelection modeSelect={setGameWord} />
+            ) : (
+                <GameBoard guessWord={gameWord.word} exitGame={clearWord} />
+            )}
+        </div>
+    );
 }
 
 export default App;
