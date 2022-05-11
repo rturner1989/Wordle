@@ -11,12 +11,7 @@ interface props {
     turn: number;
 }
 
-const GuessesTable: React.FC<props> = ({
-    gameLength,
-    history,
-    inputWord,
-    turn,
-}) => {
+const GuessesTable: React.FC<props> = ({ gameLength, history, inputWord, turn }) => {
     return (
         <div>
             {history.map((prevWord, index) => {
@@ -25,10 +20,7 @@ const GuessesTable: React.FC<props> = ({
                         <React.Fragment key={index}>
                             <Row
                                 gameLength={gameLength}
-                                prevWord={[
-                                    ...inputWord,
-                                    ...Array(gameLength - inputWord.length),
-                                ]}
+                                prevWord={[...inputWord, ...Array(gameLength - inputWord.length)]}
                             />
                         </React.Fragment>
                     );

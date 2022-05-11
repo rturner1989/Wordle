@@ -12,7 +12,7 @@ const Row: React.FC<props> = ({ prevWord }) => {
         <div className="row">
             {prevWord?.map((letter) => {
                 return (
-                    <div key={makeID()} className="rowLetter">
+                    <div key={makeID()} className={`rowLetter btn-${letter?.state}`}>
                         {letter?.keyTrigger}
                     </div>
                 );

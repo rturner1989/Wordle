@@ -14,9 +14,7 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
 
     const [answerSplit, setAnswerSplit] = useState(guessWord.split(""));
     const [currentWordInput, setCurrentWordInput] = useState<keyType[]>([]);
-    const [guessHistory, setGuessHistory] = useState<keyType[][]>([
-        ...Array(6),
-    ]);
+    const [guessHistory, setGuessHistory] = useState<keyType[][]>([...Array(6)]);
     const [keys, setKeys] = useState<keyType[]>(() =>
         alphabet.split("").map((letter: string) => {
             return {
@@ -33,27 +31,19 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
             if (key.keyTrigger !== char) {
                 return;
             }
+            if (key.state === keyState.CORRECT) return;
             setKeys((prev) => {
                 const newKey = { ...prev[index], state: color };
-                return [
-                    ...prev.slice(0, index),
-                    newKey,
-                    ...prev.slice(index + 1),
-                ];
+                return [...prev.slice(0, index), newKey, ...prev.slice(index + 1)];
             });
         });
     };
 
-    const updateHistory = (color: keyState) => {
-        guessHistory.forEach((key, index) => {
+    const updateHistory = (array: keyType[]) => {
+        guessHistory.forEach((key: keyType[]) => {
             if (key !== undefined) return;
-
             setGuessHistory((prev) => {
-                return [
-                    ...prev.slice(0, turn - 1),
-                    currentWordInput,
-                    ...prev.slice(turn),
-                ];
+                return [...prev.slice(0, turn - 1), array, ...prev.slice(turn)];
             });
         });
     };
@@ -61,29 +51,39 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
     const compareWords = () => {
         if (currentWordInput.length < answerSplit.length) return;
 
+        // add functionality to compare if word used already
+        // add functionality to see if word is a word in list
+
+        let result: keyType[] = [];
+
         currentWordInput.forEach((key, index) => {
             if (!answerSplit.includes(key.keyTrigger)) {
-                return updateKeyState(key.keyTrigger, keyState.INCORRECT);
+                result.push({
+                    keyTrigger: key.keyTrigger,
+                    state: keyState.INCORRECT,
+                });
+                updateKeyState(key.keyTrigger, keyState.INCORRECT);
+            } else if (answerSplit[index] === key.keyTrigger) {
+                result.push({
+                    keyTrigger: key.keyTrigger,
+                    state: keyState.CORRECT,
+                });
+                updateKeyState(key.keyTrigger, keyState.CORRECT);
             } else {
-                if (answerSplit[index] === key.keyTrigger) {
-                    return (
-                        updateKeyState(key.keyTrigger, keyState.CORRECT),
-                        updateHistory(keyState.CORRECT)
-                    );
-                }
-                return updateKeyState(key.keyTrigger, keyState.WRONGLOCATION);
+                result.push({
+                    keyTrigger: key.keyTrigger,
+                    state: keyState.WRONGLOCATION,
+                });
+                updateKeyState(key.keyTrigger, keyState.WRONGLOCATION);
             }
         });
 
-        if (
-            currentWordInput.map((letter) => letter.keyTrigger).join("") ===
-            guessWord
-        ) {
+        if (currentWordInput.map((letter) => letter.keyTrigger).join("") === guessWord) {
             setGameState(true);
         }
 
         setTurn(turn + 1);
-        updateHistory(keyState.DEFAULT);
+        updateHistory(result);
         setCurrentWordInput([]);
     };
 
