@@ -48,19 +48,40 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         });
     };
 
-    const compareWords = () => {
-        const joinedInput = currentWordInput.join("");
-
-        if (currentWordInput.length < answerSplit.length) return;
-        if (!guessWord.includes(joinedInput)) console.log("not included");
-
-        guessHistory.forEach((key: keyType[]) => {
-            const joinedHistory = key.join("");
-            if (key === undefined) return;
-            if (joinedHistory.includes(joinedInput)) console.log("already used");
+    const getJoinedHistory = () => {
+        let result: string[] = [];
+        guessHistory.forEach((guess: keyType[]) => {
+            if (guess !== undefined)
+                guess.forEach((key) => {
+                    result.push(key.keyTrigger);
+                });
         });
+        return result.join("");
+    };
 
+    const compareWords = () => {
         let result: keyType[] = [];
+
+        const joinedInput: string = currentWordInput.map((key: keyType) => key.keyTrigger).join("");
+
+        // if word matches
+        if (joinedInput === guessWord) setGameState(true);
+
+        // check if input has been entered before
+        if (getJoinedHistory().includes(joinedInput)) {
+            alert("word already used");
+            setCurrentWordInput([]);
+            return;
+        }
+
+        // if word is too short
+        if (currentWordInput.length < answerSplit.length) {
+            alert("not enough letters");
+            setCurrentWordInput([]);
+            return;
+        }
+
+        // add validation to check if word is a word
 
         currentWordInput.forEach((key, index) => {
             if (!answerSplit.includes(key.keyTrigger)) {
@@ -83,10 +104,6 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
                 updateKeyState(key.keyTrigger, keyState.WRONGLOCATION);
             }
         });
-
-        if (currentWordInput.map((letter) => letter.keyTrigger).join("") === guessWord) {
-            setGameState(true);
-        }
 
         setTurn(turn + 1);
         updateHistory(result);
