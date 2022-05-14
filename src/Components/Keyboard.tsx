@@ -12,14 +12,7 @@ interface props {
     gameState: boolean;
 }
 
-const Keyboard: React.FC<props> = ({
-    keys,
-    answerLength,
-    input,
-    setInput,
-    enter,
-    gameState,
-}) => {
+const Keyboard: React.FC<props> = ({ keys, answerLength, input, setInput, enter, gameState }) => {
     const addLetterToInput = (key: string) => {
         if (input.length >= answerLength) return;
         if (key === "Enter") return;
@@ -62,32 +55,22 @@ const Keyboard: React.FC<props> = ({
                 const { keyTrigger, state } = key;
                 return (
                     <Fragment key={index}>
-                        <button
-                            className={`btn btn-${state}`}
-                            onClick={() => handleInput(keyTrigger)}
-                        >
+                        <button className={`btn btn-${state}`} onClick={() => handleInput(keyTrigger)}>
                             {keyTrigger.toUpperCase()}
                         </button>
 
-                        {(keyTrigger.toLowerCase() === "p" ||
-                            keyTrigger.toLowerCase() === "l") && (
+                        {(keyTrigger.toLowerCase() === "p" || keyTrigger.toLowerCase() === "l") && (
                             <div className="emptyDiv"></div>
                         )}
 
                         {keyTrigger.toLowerCase() === "l" && (
-                            <button
-                                className="enterBtn"
-                                onClick={() => handleInput("Enter")}
-                            >
+                            <button className="enterBtn" onClick={() => handleInput("Enter")}>
                                 Enter
                             </button>
                         )}
 
                         {keyTrigger.toLowerCase() === "m" && (
-                            <button
-                                className="deleteBtn"
-                                onClick={() => handleInput("Backspace")}
-                            >
+                            <button className="deleteBtn" onClick={() => handleInput("Backspace")}>
                                 <BsBackspace />
                             </button>
                         )}

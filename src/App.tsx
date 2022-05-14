@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { singleWord } from "./Library/Interface";
 import GameSelection from "./Components/GameSelection";
@@ -6,17 +6,30 @@ import GameBoard from "./Components/GameBoard";
 
 function App() {
     const [gameWord, setGameWord] = useState<singleWord | null>(null);
+    const [data, setData] = useState<singleWord[] | null>([]);
+
+    const random: number = data ? Math.floor(Math.random() * data.length) : 0;
 
     const clearWord = () => {
         setGameWord(null);
+        setData(null);
     };
+
+    const selectNewWord = () => {
+        if (!data) return;
+        setGameWord(data[random]);
+    };
+
+    useEffect(() => {
+        selectNewWord();
+    }, [data]);
 
     return (
         <div className="App">
             {!gameWord ? (
-                <GameSelection modeSelect={setGameWord} />
+                <GameSelection modeSelect={setData} />
             ) : (
-                <GameBoard guessWord={gameWord.word} exitGame={clearWord} />
+                <GameBoard gameData={data} guessWord={gameWord.word} exitGame={clearWord} />
             )}
         </div>
     );

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { keyState } from "../Library/enums";
-import { keyType } from "../Library/Interface";
+import { keyType, singleWord } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
 
 interface props {
+    gameData: singleWord[] | null;
     guessWord: string;
     exitGame: () => void;
 }
 
-const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
+const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
     const alphabet = "qwertyuiopasdfghjklzxcvbnm";
     const answerSplit = guessWord.split("");
 
@@ -65,13 +66,9 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
         const joinedInput: string = currentWordInput.map((key: keyType) => key.keyTrigger).join("");
 
         // if word matches
-        if (joinedInput === guessWord) setGameState(true);
-
-        // check if input has been entered before
-        if (getJoinedHistory().includes(joinedInput)) {
-            alert("word already used");
-            setCurrentWordInput([]);
-            return;
+        if (joinedInput === guessWord) {
+            alert("You Win");
+            setGameState(true);
         }
 
         // if word is too short
@@ -81,7 +78,21 @@ const GameBoard: React.FC<props> = ({ guessWord, exitGame }) => {
             return;
         }
 
-        // add validation to check if word is a word
+        // check if input has been entered before
+        if (getJoinedHistory().includes(joinedInput)) {
+            alert("word already used");
+            setCurrentWordInput([]);
+            return;
+        }
+
+        // check if word is a word (based on data file)
+        if (gameData) {
+            if (!gameData.map((word) => word.word).includes(joinedInput)) {
+                alert("Not a word");
+                setCurrentWordInput([]);
+                return;
+            }
+        }
 
         currentWordInput.forEach((key, index) => {
             if (!answerSplit.includes(key.keyTrigger)) {
