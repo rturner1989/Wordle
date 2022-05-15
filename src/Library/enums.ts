@@ -4,3 +4,9 @@ export enum keyState {
     CORRECT = "correct",
     WRONGLOCATION = "wrongLocation",
 }
+
+export enum gameDifficulty {
+    EASY = "easy",
+    NORMAL = "normal",
+    HARD = "hard",
+}

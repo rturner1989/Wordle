@@ -1,23 +1,28 @@
 import React, { SetStateAction } from "react";
 import axios from "axios";
-import { gameDifficulty, singleWord } from "../Library/Interface";
+import { difficulty } from "../Library/Interface";
+import { gameDifficulty } from "../Library/enums";
 
 interface props {
     modeSelect: React.Dispatch<SetStateAction<string[] | null>>;
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
-    const gameDifficulty: gameDifficulty[] = [
-        // { diffName: "easy", diffMode: "easyModeData.json" },
-        { diffName: "normal", diffMode: "word.json" },
-        // { diffName: "hard", diffMode: "hardModeData.json" },
-    ];
-
-    const getWordData = (url: string) => {
+    const getWordData = (mode: gameDifficulty) => {
+        const url = "wordData.json";
         axios
-            .get<string[]>(url)
+            .get<difficulty[]>(url)
             .then((res) => {
-                const data = res.data;
+                const initialData = res.data;
+
+                let data: string[] = [];
+
+                initialData.forEach((obj: difficulty) => {
+                    if (obj.mode.includes(mode)) {
+                        obj.words.forEach((word) => data.push(word));
+                    }
+                });
+
                 modeSelect(data);
             })
             .catch((err) => console.error(`Error: ${err}`));
@@ -25,14 +30,9 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
 
     return (
         <div>
-            {gameDifficulty.map((diff) => {
-                const { diffName, diffMode } = diff;
-                return (
-                    <button key={diffName} onClick={() => getWordData(diffMode)}>
-                        {diffName}
-                    </button>
-                );
-            })}
+            <button onClick={() => getWordData(gameDifficulty.EASY)}>{gameDifficulty.EASY}</button>
+            <button onClick={() => getWordData(gameDifficulty.NORMAL)}>{gameDifficulty.NORMAL}</button>
+            <button onClick={() => getWordData(gameDifficulty.HARD)}>{gameDifficulty.HARD}</button>
         </div>
     );
 };

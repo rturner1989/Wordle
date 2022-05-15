@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { keyState } from "../Library/enums";
-import { keyType, singleWord } from "../Library/Interface";
+import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
 
