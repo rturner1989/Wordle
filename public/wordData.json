@@ -9084,5 +9084,6 @@
             "scrap",
             "final"
         ]
-    }
+    },
+    { "mode": "hard", "words": ["abroad", "accept", "retail", "update"] }
 ]
