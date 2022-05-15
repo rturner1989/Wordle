@@ -3,19 +3,19 @@ import axios from "axios";
 import { gameDifficulty, singleWord } from "../Library/Interface";
 
 interface props {
-    modeSelect: React.Dispatch<SetStateAction<singleWord[] | null>>;
+    modeSelect: React.Dispatch<SetStateAction<string[] | null>>;
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
     const gameDifficulty: gameDifficulty[] = [
-        { diffName: "easy", diffMode: "easyModeData.json" },
-        { diffName: "normal", diffMode: "normalModeData.json" },
-        { diffName: "hard", diffMode: "hardModeData.json" },
+        // { diffName: "easy", diffMode: "easyModeData.json" },
+        { diffName: "normal", diffMode: "word.json" },
+        // { diffName: "hard", diffMode: "hardModeData.json" },
     ];
 
     const getWordData = (url: string) => {
         axios
-            .get<singleWord[]>(url)
+            .get<string[]>(url)
             .then((res) => {
                 const data = res.data;
                 modeSelect(data);

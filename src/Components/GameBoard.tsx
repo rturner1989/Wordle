@@ -5,7 +5,7 @@ import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
 
 interface props {
-    gameData: singleWord[] | null;
+    gameData: string[] | null;
     guessWord: string;
     exitGame: () => void;
 }
@@ -87,7 +87,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
 
         // check if word is a word (based on data file)
         if (gameData) {
-            if (!gameData.map((word) => word.word).includes(joinedInput)) {
+            if (!gameData.map((word) => word).includes(joinedInput)) {
                 alert("Not a word");
                 setCurrentWordInput([]);
                 return;
