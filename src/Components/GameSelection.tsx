@@ -8,7 +8,7 @@ interface props {
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
-    const getWordData = (mode: gameDifficulty) => {
+    const getWordData = (gameMode: gameDifficulty) => {
         const url = "wordData.json";
         axios
             .get<difficulty[]>(url)
@@ -16,9 +16,12 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
                 const initialData = res.data;
 
                 let data: string[] = [];
+                // let data: string[] = initialData.find((obj) => {
+                //     if (obj.mode === gameMode) return obj.words;
+                // });
 
                 initialData.forEach((obj: difficulty) => {
-                    if (obj.mode.includes(mode)) {
+                    if (obj.mode.includes(gameMode)) {
                         obj.words.forEach((word) => data.push(word));
                     }
                 });
