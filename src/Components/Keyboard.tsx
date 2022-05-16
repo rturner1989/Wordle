@@ -29,7 +29,7 @@ const Keyboard: React.FC<props> = ({ keys, answerLength, input, setInput, enter,
     const handleInput = (key: string) => {
         if (!gameState) {
             if (key.match(/[a-z]/i)) {
-                addLetterToInput(key);
+                addLetterToInput(key.toLowerCase());
             }
             if (key === "Backspace") {
                 deleteLastLetter();
@@ -55,7 +55,7 @@ const Keyboard: React.FC<props> = ({ keys, answerLength, input, setInput, enter,
                 const { keyTrigger, state } = key;
                 return (
                     <Fragment key={index}>
-                        <button className={`btn btn-${state}`} onClick={() => handleInput(keyTrigger)}>
+                        <button className={`btn keyboard-btn-${state}`} onClick={() => handleInput(keyTrigger)}>
                             {keyTrigger.toUpperCase()}
                         </button>
 
