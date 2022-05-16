@@ -21,7 +21,7 @@ function App() {
     return (
         <div className="App">
             {gameWord ? (
-                <GameBoard gameData={data} guessWord={gameWord} exitGame={clearWord} />
+                <GameBoard gameData={data} guessWord={gameWord.toLowerCase()} exitGame={clearWord} />
             ) : (
                 <GameSelection modeSelect={setData} />
             )}

@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { keyState } from "../Library/enums";
+import { useState, useEffect } from "react";
+import useLocalStorage from "../Hooks/useLocalStorage";
+import { keyState, modalMessage } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
+import Modal from "./Modal";
 
 interface props {
-    gameData: string[] | null;
+    gameData: string[];
     guessWord: string;
     exitGame: () => void;
 }
@@ -25,7 +27,9 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
         })
     );
     const [gameState, setGameState] = useState<boolean>(false);
-    const [turn, setTurn] = useState(1);
+    const [turn, setTurn] = useState<number>(1);
+    const [score, setScore] = useLocalStorage("score", 0);
+    const [message, setMessage] = useState<modalMessage | null>(null);
 
     const updateKeyState = (char: string, color: keyState) => {
         keys.forEach((key, index) => {
@@ -42,20 +46,22 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
 
     const updateHistory = (array: keyType[]) => {
         guessHistory.forEach((key: keyType[]) => {
-            if (key !== undefined) return;
-            setGuessHistory((prev) => {
-                return [...prev.slice(0, turn - 1), array, ...prev.slice(turn)];
-            });
+            if (key === undefined) {
+                setGuessHistory((prev) => {
+                    return [...prev.slice(0, turn - 1), array, ...prev.slice(turn)];
+                });
+            }
+            return;
         });
     };
 
     const getJoinedHistory = () => {
         let result: string[] = [];
         guessHistory.forEach((guess: keyType[]) => {
-            if (guess !== undefined)
-                guess.forEach((key) => {
-                    result.push(key.keyTrigger);
-                });
+            if (guess === undefined) return;
+            guess.forEach((key) => {
+                result.push(key.keyTrigger);
+            });
         });
         return result.join("");
     };
@@ -67,31 +73,31 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
 
         // if word matches
         if (joinedInput === guessWord) {
-            alert("You Win");
+            setMessage(modalMessage.WINNER);
+            setScore(score + 1);
             setGameState(true);
         }
 
         // if word is too short
         if (currentWordInput.length < answerSplit.length) {
-            alert("not enough letters");
+            setMessage(modalMessage.NOTENOUGH);
             setCurrentWordInput([]);
             return;
         }
 
         // check if input has been entered before
         if (getJoinedHistory().includes(joinedInput)) {
-            alert("word already used");
+            setMessage(modalMessage.USED);
             setCurrentWordInput([]);
             return;
         }
 
         // check if word is a word (based on data file)
-        if (gameData) {
-            if (!gameData.map((word) => word).includes(joinedInput)) {
-                alert("Not a word");
-                setCurrentWordInput([]);
-                return;
-            }
+
+        if (!gameData.map((word) => word.toLowerCase()).includes(joinedInput)) {
+            setMessage(modalMessage.NOTWORD);
+            setCurrentWordInput([]);
+            return;
         }
 
         currentWordInput.forEach((key, index) => {
@@ -121,10 +127,22 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
         setCurrentWordInput([]);
     };
 
+    useEffect(() => {
+        let timer = setTimeout(() => {
+            setMessage(null);
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [message]);
+
     return (
         <div className="gameContainer">
-            {guessWord}
-            <button onClick={exitGame}>clear</button>
+            <section>
+                <button onClick={exitGame}>clear</button>
+                <Modal modalMessage={message} />
+            </section>
             <GuessesTable
                 gameLength={answerSplit.length}
                 history={guessHistory}

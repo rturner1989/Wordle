@@ -10,3 +10,10 @@ export enum gameDifficulty {
     NORMAL = "normal",
     HARD = "hard",
 }
+
+export enum modalMessage {
+    WINNER = "You Win",
+    NOTENOUGH = "Not Enough Letters",
+    USED = "Word Already Used",
+    NOTWORD = "Not A Word",
+}
