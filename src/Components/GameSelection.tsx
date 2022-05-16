@@ -4,7 +4,7 @@ import { difficulty } from "../Library/Interface";
 import { gameDifficulty } from "../Library/enums";
 
 interface props {
-    modeSelect: React.Dispatch<SetStateAction<string[] | null>>;
+    modeSelect: React.Dispatch<SetStateAction<string[]>>;
 }
 
 const GameSelection: React.FC<props> = ({ modeSelect }) => {
@@ -14,19 +14,10 @@ const GameSelection: React.FC<props> = ({ modeSelect }) => {
             .get<difficulty[]>(url)
             .then((res) => {
                 const initialData = res.data;
-
-                let data: string[] = [];
-                // let data: string[] = initialData.find((obj) => {
-                //     if (obj.mode === gameMode) return obj.words;
-                // });
-
-                initialData.forEach((obj: difficulty) => {
-                    if (obj.mode.includes(gameMode)) {
-                        obj.words.forEach((word) => data.push(word));
-                    }
-                });
-
-                modeSelect(data);
+                const gameWord = initialData.find((obj) => obj.mode === gameMode)?.words;
+                if (gameWord) {
+                    modeSelect(gameWord);
+                }
             })
             .catch((err) => console.error(`Error: ${err}`));
     };
