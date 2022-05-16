@@ -4,25 +4,18 @@ import GameSelection from "./Components/GameSelection";
 import GameBoard from "./Components/GameBoard";
 
 function App() {
-    const [gameWord, setGameWord] = useState<string | null>(null);
-    const [data, setData] = useState<string[] | null>([]);
+    const [gameWord, setGameWord] = useState<string>("");
+    const [data, setData] = useState<string[]>([]);
 
-    const random: number = data ? Math.floor(Math.random() * data.length) : 0;
+    const random: number = Math.floor(Math.random() * data.length);
 
     const clearWord = () => {
-        setGameWord(null);
-        setData(null);
-    };
-
-    const selectNewWord = () => {
-        if (data) {
-            setGameWord(data[random]);
-        }
-        return;
+        setGameWord("");
+        setData([]);
     };
 
     useEffect(() => {
-        selectNewWord();
+        setGameWord(data[random]);
     }, [data]);
 
     return (
