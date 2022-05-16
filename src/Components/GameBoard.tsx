@@ -139,10 +139,16 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
 
     return (
         <div className="gameContainer">
-            <section>
-                <button onClick={exitGame}>clear</button>
+            <div className="displayBar">
+                <button className="exitBtn" onClick={exitGame}>
+                    clear
+                </button>
                 <Modal modalMessage={message} />
-            </section>
+                <div className="scoreContainer">
+                    <h4>Score:</h4>
+                    <p>{score}</p>
+                </div>
+            </div>
             <GuessesTable
                 gameLength={answerSplit.length}
                 history={guessHistory}

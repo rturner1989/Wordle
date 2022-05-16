@@ -6,7 +6,11 @@ interface props {
 }
 
 const Modal: React.FC<props> = ({ modalMessage }) => {
-    return <div>{modalMessage === null ? "" : modalMessage}</div>;
+    return (
+        <div className="modalContainer">
+            <p className="gameMessage">{modalMessage === null ? "" : modalMessage}</p>
+        </div>
+    );
 };
 
 export default Modal;

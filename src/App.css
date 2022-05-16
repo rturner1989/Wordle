@@ -1,3 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.App {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    padding: 1rem;
+    gap: 0.5rem;
+    border: black solid 1px;
+}
+
+.displayBar {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 30px;
+    justify-content: center;
+    align-items: center;
+}
+.exitBtn {
+    max-height: 1.5rem;
+    position: absolute;
+    left: 0;
+}
+.modalContainer {
+    min-width: 150px;
+    text-align: center;
+}
+.scoreContainer {
+    display: flex;
+    position: absolute;
+    right: 0;
+}
+
+.gamegrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+.row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    gap: 0.5rem;
+}
+.rowLetter {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border: black solid 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboard {
+    text-align: center;
+}
+.btn {
+    min-width: 1.8rem;
+    min-height: 2.1rem;
+    margin: 2px;
+}
+.enterBtn,
+.deleteBtn {
+    min-width: 2.5rem;
+    min-height: 2.2rem;
+    margin: 2px;
+}
 .btn-correct {
     background-color: green;
 }
@@ -6,16 +87,4 @@
 }
 .btn-wrongLocation {
     background-color: yellow;
-}
-.row {
-    display: flex;
-}
-.rowLetter {
-    width: 50px;
-    aspect-ratio: 1/1;
-    border: black solid 1px;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
