@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import GameSelection from "./Components/GameSelection";
 import GameBoard from "./Components/GameBoard";
+import useLocalStorage from "./Hooks/useLocalStorage";
 
 function App() {
     const [gameWord, setGameWord] = useState<string>("");
     const [data, setData] = useState<string[]>([]);
+    const [score, setScore] = useLocalStorage("score", 0);
 
     const random: number = Math.floor(Math.random() * data.length);
 
@@ -25,7 +27,14 @@ function App() {
     return (
         <div className="App">
             {gameWord ? (
-                <GameBoard gameData={data} guessWord={gameWord.toLowerCase()} exitGame={clearWord} newWord={newWord} />
+                <GameBoard
+                    gameData={data}
+                    guessWord={gameWord.toLowerCase()}
+                    exitGame={clearWord}
+                    newWord={newWord}
+                    score={score}
+                    setScore={setScore}
+                />
             ) : (
                 <GameSelection modeSelect={setData} />
             )}

@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import useLocalStorage from "../Hooks/useLocalStorage";
+import { useState, useEffect, SetStateAction } from "react";
 import { keyState, popupMessage } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
@@ -12,9 +11,11 @@ interface props {
     guessWord: string;
     exitGame: () => void;
     newWord: () => void;
+    score: number;
+    setScore: React.Dispatch<SetStateAction<number>>;
 }
 
-const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord }) => {
+const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, score, setScore }) => {
     const answerSplit = guessWord.split("");
     const alphabet = "qwertyuiopasdfghjklzxcvbnm";
     let defaultKeys = () =>
@@ -31,7 +32,6 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord }) 
     const [keys, setKeys] = useState<keyType[]>(defaultKeys());
     const [gameState, setGameState] = useState<boolean>(false);
     const [turn, setTurn] = useState<number>(1);
-    const [score, setScore] = useLocalStorage("score", 0);
     const [message, setMessage] = useState<popupMessage | null>(null);
 
     const resetGame = () => {
