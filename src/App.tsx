@@ -14,6 +14,10 @@ function App() {
         setData([]);
     };
 
+    const newWord = () => {
+        setGameWord(data[random]);
+    };
+
     useEffect(() => {
         setGameWord(data[random]);
     }, [data]);
@@ -21,7 +25,7 @@ function App() {
     return (
         <div className="App">
             {gameWord ? (
-                <GameBoard gameData={data} guessWord={gameWord.toLowerCase()} exitGame={clearWord} />
+                <GameBoard gameData={data} guessWord={gameWord.toLowerCase()} exitGame={clearWord} newWord={newWord} />
             ) : (
                 <GameSelection modeSelect={setData} />
             )}

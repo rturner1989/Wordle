@@ -7,8 +7,6 @@ interface props {
 }
 
 const Row: React.FC<props> = ({ prevWord, gameLength }) => {
-    console.log(gameLength);
-
     return (
         <div
             className="row"

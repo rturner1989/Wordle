@@ -12,6 +12,7 @@
 }
 
 .gameContainer {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -125,4 +126,22 @@
     border-radius: 5px;
     border: black solid 1px;
     background-color: yellow;
+}
+
+.winLose {
+    position: absolute;
+    top: 50%;
+    width: 200px;
+    aspect-ratio: 1/1;
+    border: black solid 1px;
+    background-color: white;
+    animation: popIn 0.2s forwards;
+}
+@keyframes popIn {
+    from {
+        transform: scale(0.5);
+    }
+    to {
+        transform: scale(1);
+    }
 }

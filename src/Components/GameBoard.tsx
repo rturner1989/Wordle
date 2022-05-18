@@ -1,35 +1,51 @@
 import { useState, useEffect } from "react";
 import useLocalStorage from "../Hooks/useLocalStorage";
-import { keyState, modalMessage } from "../Library/enums";
+import { keyState, popupMessage } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
-import Modal from "./Modal";
+import Popup from "./Popup";
+import SplashScreen from "./SplashScreen";
 
 interface props {
     gameData: string[];
     guessWord: string;
     exitGame: () => void;
+    newWord: () => void;
 }
 
-const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
-    const alphabet = "qwertyuiopasdfghjklzxcvbnm";
+const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord }) => {
     const answerSplit = guessWord.split("");
-
-    const [currentWordInput, setCurrentWordInput] = useState<keyType[]>([]);
-    const [guessHistory, setGuessHistory] = useState<keyType[][]>([...Array(6)]);
-    const [keys, setKeys] = useState<keyType[]>(() =>
+    const alphabet = "qwertyuiopasdfghjklzxcvbnm";
+    let defaultKeys = () =>
         alphabet.split("").map((letter: string) => {
             return {
                 keyTrigger: letter,
                 state: keyState.DEFAULT,
             };
-        })
-    );
+        });
+    const defaultHistory = [...Array(6)];
+
+    const [currentWordInput, setCurrentWordInput] = useState<keyType[]>([]);
+    const [guessHistory, setGuessHistory] = useState<keyType[][]>(defaultHistory);
+    const [keys, setKeys] = useState<keyType[]>(defaultKeys());
     const [gameState, setGameState] = useState<boolean>(false);
     const [turn, setTurn] = useState<number>(1);
     const [score, setScore] = useLocalStorage("score", 0);
-    const [message, setMessage] = useState<modalMessage | null>(null);
+    const [message, setMessage] = useState<popupMessage | null>(null);
+
+    const resetGame = () => {
+        setGuessHistory(defaultHistory);
+        setCurrentWordInput([]);
+        setKeys(defaultKeys());
+        setTurn(1);
+        setGameState(false);
+    };
+
+    const playAgain = () => {
+        resetGame();
+        newWord();
+    };
 
     const updateKeyState = (char: string, color: keyState) => {
         keys.forEach((key, index) => {
@@ -73,29 +89,27 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
 
         // if word matches
         if (joinedInput === guessWord) {
-            setMessage(modalMessage.WINNER);
             setScore(score + 1);
             setGameState(true);
         }
 
         // if word is too short
         if (currentWordInput.length < answerSplit.length) {
-            setMessage(modalMessage.NOTENOUGH);
+            setMessage(popupMessage.NOTENOUGH);
             setCurrentWordInput([]);
             return;
         }
 
         // check if input has been entered before
         if (getJoinedHistory().includes(joinedInput)) {
-            setMessage(modalMessage.USED);
+            setMessage(popupMessage.USED);
             setCurrentWordInput([]);
             return;
         }
 
         // check if word is a word (based on data file)
-
         if (!gameData.map((word) => word.toLowerCase()).includes(joinedInput)) {
-            setMessage(modalMessage.NOTWORD);
+            setMessage(popupMessage.NOTWORD);
             setCurrentWordInput([]);
             return;
         }
@@ -137,13 +151,19 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
         };
     }, [message]);
 
+    useEffect(() => {
+        if (turn > 6) {
+            setGameState(true);
+        }
+    }, [turn]);
+
     return (
         <div className="gameContainer">
             <div className="displayBar">
                 <button className="exitBtn" onClick={exitGame}>
                     clear
                 </button>
-                <Modal modalMessage={message} />
+                <Popup popupMessage={message} />
                 <div className="scoreContainer">
                     <h4>Score:</h4>
                     <p>{score}</p>
@@ -163,6 +183,9 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame }) => {
                 enter={compareWords}
                 gameState={gameState}
             />
+            {gameState && (
+                <SplashScreen playAgain={playAgain} exit={exitGame} message={turn > 6 ? "Loser" : "Winner"} />
+            )}
         </div>
     );
 };

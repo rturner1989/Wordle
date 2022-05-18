@@ -11,8 +11,7 @@ export enum gameDifficulty {
     HARD = "hard",
 }
 
-export enum modalMessage {
-    WINNER = "You Win",
+export enum popupMessage {
     NOTENOUGH = "Not Enough Letters",
     USED = "Word Already Used",
     NOTWORD = "Not A Word",
