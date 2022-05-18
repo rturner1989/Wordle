@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
-import { keyState, popupMessage } from "../Library/enums";
+import { keyState, outcome, popupMessage } from "../Library/enums";
 import { keyType } from "../Library/Interface";
 import GuessesTable from "./GuessesTable";
 import Keyboard from "./Keyboard";
@@ -33,6 +33,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
     const [gameState, setGameState] = useState<boolean>(false);
     const [turn, setTurn] = useState<number>(1);
     const [message, setMessage] = useState<popupMessage | null>(null);
+    const [outcomeMessage, setOutcomeMessage] = useState<string>(outcome.LOSER);
 
     const resetGame = () => {
         setGuessHistory(defaultHistory);
@@ -40,6 +41,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
         setKeys(defaultKeys());
         setTurn(1);
         setGameState(false);
+        setOutcomeMessage("Loser");
     };
 
     const playAgain = () => {
@@ -90,6 +92,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
         // if word matches
         if (joinedInput === guessWord) {
             setScore(score + 1);
+            setOutcomeMessage(outcome.WINNER);
             setGameState(true);
         }
 
@@ -136,7 +139,10 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
             }
         });
 
-        setTurn(turn + 1);
+        if (turn < 7) {
+            setTurn(turn + 1);
+        }
+
         updateHistory(result);
         setCurrentWordInput([]);
     };
@@ -161,7 +167,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
         <div className="gameContainer">
             <div className="displayBar">
                 <button className="exitBtn" onClick={exitGame}>
-                    clear
+                    Exit Game
                 </button>
                 <Popup popupMessage={message} />
                 <div className="scoreContainer">
@@ -183,9 +189,7 @@ const GameBoard: React.FC<props> = ({ gameData, guessWord, exitGame, newWord, sc
                 enter={compareWords}
                 gameState={gameState}
             />
-            {gameState && (
-                <SplashScreen playAgain={playAgain} exit={exitGame} message={turn > 6 ? "Loser" : "Winner"} />
-            )}
+            {gameState && <SplashScreen playAgain={playAgain} exit={exitGame} message={outcomeMessage} />}
         </div>
     );
 };

@@ -16,3 +16,8 @@ export enum popupMessage {
     USED = "Word Already Used",
     NOTWORD = "Not A Word",
 }
+
+export enum outcome {
+    WINNER = "You Win!",
+    LOSER = "You Lose!",
+}

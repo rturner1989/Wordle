@@ -20,12 +20,19 @@ function App() {
         setGameWord(data[random]);
     };
 
+    const resetScore = () => {
+        setScore(0);
+    };
+
     useEffect(() => {
         setGameWord(data[random]);
     }, [data]);
 
     return (
         <div className="App">
+            <button className="reset" onClick={() => resetScore()}>
+                Reset Score
+            </button>
             {gameWord ? (
                 <GameBoard
                     gameData={data}
